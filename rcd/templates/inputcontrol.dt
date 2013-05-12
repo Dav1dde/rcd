@@ -1,0 +1,10 @@
+!!! 5
+html
+    head
+        title lol
+        script(type="text/javascript", src="#{req.rootDir}static/js/jquery-1.9.1.min.js")
+        script(type="text/javascript", src="#{req.rootDir}static/js/inputcontrol.js")
+
+    body
+        p Really?
+        p #{req.rootDir}

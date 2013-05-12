@@ -1,0 +1,8 @@
+!!! 5
+html
+    head
+        - string title = "Error: " ~ to!string(error.code);
+        title #{title}
+
+    body
+        p #{title}

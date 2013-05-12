@@ -1,0 +1,17 @@
+{
+    "name": "rcd",
+    "description": "A remote control",
+    "homepage": "",
+    "copyright": "Copyright © 2013, David Herberth",
+    "license": "MIT",
+    "authors": [
+        "David Herberth"
+    ],
+    "dependencies": {
+        "vibe-d": "~master"
+    },
+    "sourcePaths": ["rcd"],
+    "stringImportPaths": ["rcd/templates"],
+    "targetPath": "bin",
+    "targetType": "executable"
+}

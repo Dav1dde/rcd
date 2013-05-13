@@ -9,7 +9,7 @@ private {
     import rcd.ic.util : Coord;
 }
 
-void click(Display *display, int button) {
+void click(Display *display, ButtonName button) {
     XEvent event;
 
     event.xbutton.button = button;

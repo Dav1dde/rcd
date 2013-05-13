@@ -5,7 +5,7 @@ private {
     import std.stdio : stderr, writefln;
     import vibe.d;
 
-    import rcd.ic.inputcontrol : InputControl;
+    import rcd.ic.inputcontrol : WSInputControl, InputControl;
 }
 
 
@@ -26,7 +26,7 @@ class Main {
         router = new UrlRouter();
         router.get("/static/*", serveStaticFiles("rcd/"));
 
-        ic = new InputControl(router);
+        ic = new WSInputControl(router);
     }
 
     void on_error(HttpServerRequest req, HttpServerResponse res, HttpServerErrorInfo error) {

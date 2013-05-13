@@ -45,7 +45,7 @@ $(function() {
         lastMove["y"] = event.clientY;
 
         socket.send({
-            action: "mousemove",
+            action: "move_mouse",
             x: offsetX,
             y: offsetY
         });
@@ -54,12 +54,6 @@ $(function() {
     $(window).click(function(event) {
         socket.send({
             action: "click"
-        });
-    });
-
-    $(window).dblclick(function(event) {
-        socket.send({
-            action: "dblclick"
         });
     });
 
@@ -83,17 +77,13 @@ $(function() {
         lastHammerDelta.y = event.gesture.deltaY;
 
         socket.send({
-            action: "mousemove",
+            action: "move_mouse",
             x: deltaX,
             y: deltaY
         });
     }).on("tap", function(event) {
         socket.send({
             action: "click"
-        });
-    }).on("doubletap", function(event) {
-        socket.send({
-            action: "dblclick"
         });
     });
 

@@ -3,7 +3,7 @@ module rcd.ic.inputcontrol;
 private {
     import vibe.d : UrlRouter, handleWebSockets, WebSocket,
                     Json, staticTemplate, parseJsonString,
-                    logError, logDebug;
+                    logError, logDebug, logInfo;
 
     import std.stdio : writefln;
     import std.signals;
@@ -28,8 +28,10 @@ class InputControl {
         init_actions();
     }
 
-    private void init_actions() {
-        foreach(member; __traits(allMembers, typeof(this))) {
+    protected void init_actions() {
+        alias T = typeof(this);
+
+        foreach(member; __traits(allMembers, T)) {
             static if(__traits(compiles, hasAttribute!(mixin(member), Action)) &&
                         hasAttribute!(mixin(member), Action)) {
                 alias ParameterTypeTuple!(mixin(member)) Args;
@@ -46,6 +48,8 @@ class InputControl {
                     alias member command;
                 }
 
+
+                //pragma(msg, command);
                 actions[command].connect(&(_wrapper!(mixin(member), member, Args)));
             }
         }
@@ -56,7 +60,11 @@ class InputControl {
         string[] names = [ParameterIdentifierTuple!fun];
 
         foreach(i, arg; new_args) {
-            new_args[i] = json[names[i]].get!(typeof(arg))();
+            static if(is(typeof(arg) == Json)) {
+                new_args[i] = json;
+            } else {
+                new_args[i] = json[names[i]].get!(typeof(arg))();
+            }
         }
 
         return fun(new_args);
@@ -82,7 +90,17 @@ class InputControl {
 
     @Action
     void click() {
-        mouse.click();
+        mouse.click(true);
+    }
+
+    @Action
+    void click_release() {
+        mouse.click(false);
+    }
+
+    @Action("log")
+    void log_js(Json json) {
+        logInfo("[JS Log Request]: %s", json);
     }
 }
 
@@ -98,6 +116,7 @@ class WSInputControl : InputControl {
     void on_new_connection(WebSocket socket) {
         while(socket.connected) {
             auto msg = socket.receiveText();
+            writefln("Incoming: %s", msg);
             auto json = parseJsonString(msg);
 
             dispatch(json);

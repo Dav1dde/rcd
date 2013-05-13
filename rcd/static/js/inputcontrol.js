@@ -55,6 +55,11 @@ $(function() {
         socket.send({
             action: "click"
         });
+        setTimeout(function() {
+            socket.send({
+                action: "click_release"
+            });
+        }, 100);
     });
 
 
@@ -68,6 +73,9 @@ $(function() {
             x: event.gesture.deltaX,
             y: event.gesture.deltaY
         }
+        socket.send({
+            action: "click"
+        });
     }).on("drag", function(event) {
         if(!event.gesture) { return; }
 
@@ -81,9 +89,9 @@ $(function() {
             x: deltaX,
             y: deltaY
         });
-    }).on("tap", function(event) {
+    }).on("dragend", function(event) {
         socket.send({
-            action: "click"
+            action: "click_release"
         });
     });
 

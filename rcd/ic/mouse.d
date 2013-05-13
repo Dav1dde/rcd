@@ -47,9 +47,9 @@ void move_to(int x, int y) {
     }
 }
 
-void click(MouseButton btn = MouseButton.Left) {
+void click(bool press, MouseButton btn = MouseButton.Left) {
     version(Posix) {
-        xmouse.click(display, cast(ButtonName)btn);
+        xmouse.click(display, cast(ButtonName)btn, press);
     } else {
         throw new Exception("mouse.click not implemented");
     }

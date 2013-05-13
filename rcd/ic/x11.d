@@ -9,7 +9,7 @@ private {
     import rcd.ic.util : Coord;
 }
 
-void click(Display *display, ButtonName button) {
+void click(Display *display, ButtonName button, bool press=true) {
     XEvent event;
 
     event.xbutton.button = button;
@@ -24,19 +24,19 @@ void click(Display *display, ButtonName button) {
              &event.xbutton.state);
     }
 
-    // Press
-    event.type = EventType.ButtonPress;
-    if (XSendEvent (display, PointerWindow, Bool.True, EventMask.ButtonPressMask, &event) == 0) {
+    EventMask mask;
+    if(press) {
+        event.type = EventType.ButtonPress;
+        mask = EventMask.ButtonPressMask;
+    } else {
+        event.type = EventType.ButtonRelease;
+        mask = EventMask.ButtonReleaseMask;
+    }
+
+    if (XSendEvent (display, PointerWindow, Bool.True, mask, &event) == 0) {
         throw new Exception("Unable to send click-event");
     }
     XFlush (display);
-
-    // Release
-    event.type = EventType.ButtonRelease;
-    if (XSendEvent (display, PointerWindow, Bool.True, EventMask.ButtonReleaseMask, &event) == 0) {
-        throw new Exception("Unable to send click-event");
-    }
-    XFlush(display);
 }
 
 

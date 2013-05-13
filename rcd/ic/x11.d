@@ -26,14 +26,16 @@ void click(Display *display, ButtonName button) {
 
     // Press
     event.type = EventType.ButtonPress;
-    if (XSendEvent (display, PointerWindow, Bool.True, EventMask.ButtonPressMask, &event) == 0)
-        stderr.writeln("Error to send the event!");
+    if (XSendEvent (display, PointerWindow, Bool.True, EventMask.ButtonPressMask, &event) == 0) {
+        throw new Exception("Unable to send click-event");
+    }
     XFlush (display);
 
     // Release
     event.type = EventType.ButtonRelease;
-    if (XSendEvent (display, PointerWindow, Bool.True, EventMask.ButtonReleaseMask, &event) == 0)
-        stderr.writeln("Error to send the event!");
+    if (XSendEvent (display, PointerWindow, Bool.True, EventMask.ButtonReleaseMask, &event) == 0) {
+        throw new Exception("Unable to send click-event");
+    }
     XFlush(display);
 }
 

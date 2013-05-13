@@ -4,6 +4,8 @@ private {
     import std.stdio : writefln;
 
     import vibe.d;
+
+    import mouse = rcd.ic.mouse;
 }
 
 
@@ -17,6 +19,11 @@ class InputControl {
         while(socket.connected) {
             auto msg = socket.receiveText();
             writefln("Incoming: %s", msg);
+            auto json = parseJsonString(msg);
+
+            if(json["action"].get!string == "mousemove") {
+                mouse.move(json["x"].get!int, json["y"].get!int);
+            }
         }
     }
 }

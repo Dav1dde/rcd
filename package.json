@@ -10,8 +10,9 @@
     "dependencies": {
         "vibe-d": "~master"
     },
-    "sourcePaths": ["rcd"],
-    "stringImportPaths": ["rcd/templates"],
+    "sourcePaths": ["rcd", "lib/x11/deimos/"],
+    "stringImportPaths": ["rcd/templates", "lib/x11/"],
+    "libs-posix": ["X11"],
     "targetPath": "bin",
     "targetType": "executable"
 }

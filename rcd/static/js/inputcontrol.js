@@ -5,15 +5,30 @@ $(function() {
 
     var socket = {
         socket: new WebSocket("ws://" + location.host + "/ws" + location.pathname),
-        status: "closed"
+        status: "closed",
+        onopen: function() {},
+        onerror: function() {},
+        onmessage: function() {}
     }
+    socket.send = function(message) {
+        s = JSON.stringify(message);
+        //console.log(message);
+        //console.log(s);
+        socket.socket.send(s);
+    }
+    socket.socket.onmessage = function(message) {
+        socket.onmessage(JSON.parse(message));
+    }
+
     socket.socket.onopen = function() {
         socket.status = "ready";
+        socket.onopen();
     };
     socket.socket.onerror = function(err) {
         socket.status = "error";
         console.log("WebSocket Error: ");
         console.log(err);
+        socket.onerror(err);
     };
 
     var lastMove = null;
@@ -29,28 +44,57 @@ $(function() {
         lastMove["x"] = event.clientX;
         lastMove["y"] = event.clientY;
 
-        if(socket.status == "ready") {
-            socket.socket.send(JSON.stringify({
-                action: "mousemove",
-                x: offsetX,
-                y: offsetY
-            }));
-        }
+        socket.send({
+            action: "mousemove",
+            x: offsetX,
+            y: offsetY
+        });
     });
 
     $(window).click(function(event) {
-        if(socket.status == "ready") {
-            socket.socket.send(JSON.stringify({
-                action: "click"
-            }));
-        }
+        socket.send({
+            action: "click"
+        });
     });
 
     $(window).dblclick(function(event) {
-        if(socket.status == "ready") {
-            socket.socket.send(JSON.stringify({
-                action: "dblclick"
-            }));
-        }
+        socket.send({
+            action: "dblclick"
+        });
     });
+
+
+    var lastHammerDelta;
+    var hammertime = Hammer($("html").get(0), {
+        prevent_default: true,
+        no_mouseevents: true
+    }).on("dragstart", function(event) {
+        if(!event.gesture) { return; }
+        lastHammerDelta = {
+            x: event.gesture.deltaX,
+            y: event.gesture.deltaY
+        }
+    }).on("drag", function(event) {
+        if(!event.gesture) { return; }
+
+        deltaX = event.gesture.deltaX - lastHammerDelta.x;
+        deltaY = event.gesture.deltaY - lastHammerDelta.y;
+        lastHammerDelta.x = event.gesture.deltaX;
+        lastHammerDelta.y = event.gesture.deltaY;
+
+        socket.send({
+            action: "mousemove",
+            x: deltaX,
+            y: deltaY
+        });
+    }).on("tap", function(event) {
+        socket.send({
+            action: "click"
+        });
+    }).on("doubletap", function(event) {
+        socket.send({
+            action: "dblclick"
+        });
+    });
+
 });

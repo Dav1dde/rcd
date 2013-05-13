@@ -19,8 +19,8 @@ class Main {
 
         settings = new HttpServerSettings();
         settings.hostName = "localhost";
-        settings.port = 8077;
-        settings.bindAddresses = ["127.0.0.1"];
+        settings.port = 8076;
+        //settings.bindAddresses = ["127.0.0.1", "0.0.0.0"];
         settings.errorPageHandler = &on_error;
 
         router = new UrlRouter();

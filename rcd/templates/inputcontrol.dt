@@ -2,9 +2,11 @@
 html
     head
         title lol
+        link(rel= 'stylesheet', type='text/css', href='#{req.rootDir}static/css/inputcontrol.css')
+
         script(type="text/javascript", src="#{req.rootDir}static/js/jquery-1.9.1.min.js")
+        script(type="text/javascript", src="#{req.rootDir}static/js/hammer.min.js")
         script(type="text/javascript", src="#{req.rootDir}static/js/inputcontrol.js")
 
     body
-        p Really?
-        p #{req.rootDir}
+        div(id="hammer")

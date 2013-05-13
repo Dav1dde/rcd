@@ -1,5 +1,4 @@
 
-
 $(function() {
     console.log("Hello World");
 
@@ -31,6 +30,17 @@ $(function() {
         socket.onerror(err);
     };
 
+    function logRemote(arg) {
+        if(typeof arg == "string") {
+            arg = {message: arg}
+        }
+        arg = $.extend({}, arg);
+        arg._old_action = arg.action;
+        arg.action = "log";
+        console.log(arg);
+        socket.send(arg);
+    }
+
     var lastMove = null;
     $(window).mousemove(function(event) {
         if(lastMove === null) {
@@ -55,15 +65,15 @@ $(function() {
         socket.send({
             action: "click"
         });
-        setTimeout(function() {
-            socket.send({
-                action: "click_release"
-            });
-        }, 100);
+        socket.send({
+            action: "click_release"
+        });
     });
 
 
     var lastHammerDelta;
+    var releaseClick = false;
+
     var hammertime = Hammer($("html").get(0), {
         prevent_default: true,
         no_mouseevents: true
@@ -73,9 +83,6 @@ $(function() {
             x: event.gesture.deltaX,
             y: event.gesture.deltaY
         }
-        socket.send({
-            action: "click"
-        });
     }).on("drag", function(event) {
         if(!event.gesture) { return; }
 
@@ -90,6 +97,10 @@ $(function() {
             y: deltaY
         });
     }).on("dragend", function(event) {
+    }).on("tap", function(event) {
+        socket.send({
+            action: "click"
+        });
         socket.send({
             action: "click_release"
         });

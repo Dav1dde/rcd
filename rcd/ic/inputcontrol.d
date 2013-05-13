@@ -116,7 +116,7 @@ class WSInputControl : InputControl {
     void on_new_connection(WebSocket socket) {
         while(socket.connected) {
             auto msg = socket.receiveText();
-            writefln("Incoming: %s", msg);
+//             writefln("Incoming: %s", msg);
             auto json = parseJsonString(msg);
 
             dispatch(json);
